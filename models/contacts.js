@@ -53,7 +53,7 @@ const updateContact = async (id, body) => {
   const contacts = await readContacts()
   const contactIndex = contacts.findIndex((contact) => contact.id === id)
   if (contactIndex === -1) return null
-  contacts[contactIndex] = { id: id, ...body }
+  contacts[contactIndex] = { id, ...body }
   await writeContacts(contacts)
   return contacts[contactIndex]
 }
