@@ -1,12 +1,11 @@
 const express = require('express')
-const contactFunctions = require('../../models/contacts')
-const { contactSchema } = require("../../models/contacts")
+const { contactModel, contactJoiSchema, favoriteJoiSchema } = require("../../models/contact")
 
 const router = express.Router()
 
 router.get('/', async (req, res, next) => {
   try {
-    const contacts = await contactFunctions.listContacts()
+    const contacts = await contactModel.find()
     res.status(200).json(contacts)
   } catch (error) {
     next(error)
@@ -16,11 +15,11 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params
-    const contact = await contactFunctions.getContactById(id)
-    if (!contact) {
-      const error = new Error();
-      error.status = 404;
-      throw error;
+    const contact = await contactModel.findById(id)
+    if (contact === null) {
+      const error = new Error()
+      error.status = 404
+      throw error
     }
     res.status(200).json(contact)
   } catch (error) {
@@ -29,14 +28,20 @@ router.get('/:id', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
+  const contact = {
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    favorite: req.body.favorite,
+  };
   try {
-    const { error } = contactSchema.validate(req.body);
+    const { error } = contactJoiSchema.validate(req.body);
     if (error) {
       const errorValidate = new Error(`missing required ${error.details[0].path} field`);
       errorValidate.status = 400;
       throw errorValidate;
     }
-    const newContact = await contactFunctions.addContact(req.body)
+    const newContact = await contactModel.create(contact);
     res.status(201).json(newContact)
   } catch (error) {
     next(error)
@@ -46,8 +51,8 @@ router.post('/', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     const { id } = req.params
-    const contact = await contactFunctions.removeContact(id)
-    if (!contact) {
+    const contact = await contactModel.findByIdAndDelete(id)
+    if (contact === null) {
       const error = new Error();
       error.status = 404;
       throw error;
@@ -59,21 +64,49 @@ router.delete('/:id', async (req, res, next) => {
 })
 
 router.put('/:id', async (req, res, next) => {
+  const contact = {
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    favorite: req.body.favorite,
+  };
   try {
-    const { error } = contactSchema.validate(req.body);
+    const { error } = contactJoiSchema.validate(req.body);
     if (error) {
       const errorValidate = new Error(`missing required ${error.details[0].path} field`);
       errorValidate.status = 400;
       throw errorValidate;
     }
     const { id } = req.params;
-    const contact = await contactFunctions.updateContact(id, req.body)
-    if (!contact) {
+    const changedContact = await contactModel.findByIdAndUpdate(id, contact, { new: true })
+    if (changedContact === null) {
       const error = new Error();
       error.status = 404;
       throw error;
     }
-    res.status(200).json(contact)
+    res.status(200).json(changedContact)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.patch('/:id', async (req, res, next) => {
+  const favorite = { favorite: req.body.favorite }
+  try {
+    const { error } = favoriteJoiSchema.validate(req.body);
+    if (error) {
+      const errorValidate = new Error("missing field favorite");
+      errorValidate.status = 400;
+      throw errorValidate;
+    }
+    const { id } = req.params;
+    const changedContact = await contactModel.findByIdAndUpdate(id, favorite, { new: true })
+    if (changedContact === null) {
+      const error = new Error();
+      error.status = 404;
+      throw error;
+    }
+    res.status(200).json(changedContact)
   } catch (error) {
     next(error)
   }
