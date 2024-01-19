@@ -1,5 +1,5 @@
-const { contactModel } = require('../models/contact')
-const newError = require('../heplers/newError')
+const { contactModel } = require('../../models/contacts')
+const newError = require('../../heplers/newError')
 
 async function get(req, res) {
     const { id } = req.params
