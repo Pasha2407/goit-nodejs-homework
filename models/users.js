@@ -1,14 +1,10 @@
-const mongoose = require("mongoose")
-const Joi = require("joi")
+const mongoose = require('mongoose')
+const Joi = require('joi')
 
-const subscriptionEnum = ["starter", "pro", "business"]
+const subscriptionEnum = ['starter', 'pro', 'business']
 
 const userSchema = new mongoose.Schema(
     {
-        name: {
-            type: String,
-            required: true,
-        },
         email: {
             type: String,
             required: true,
@@ -21,7 +17,7 @@ const userSchema = new mongoose.Schema(
         subscription: {
             type: String,
             enum: subscriptionEnum,
-            default: "starter"
+            default: 'starter'
         },
         token: {
             type: String,
@@ -29,15 +25,11 @@ const userSchema = new mongoose.Schema(
         },
     },
     { versionKey: false }
-);
+)
 
 const userModel = mongoose.model('User', userSchema)
 
 const userJoiSchema = Joi.object({
-    name: Joi.string().required().messages({
-        'any.required': 'missing required name field',
-        'string.base': 'field name must be a string'
-    }),
     email: Joi.string().required().messages({
         'any.required': 'missing required email field',
         'string.base': 'field email must be a string'
@@ -50,9 +42,17 @@ const userJoiSchema = Joi.object({
         'any.only': 'Subscription must be one of {#valids}',
         'string.base': 'field subscription must be a string'
     }),
-});
+})
+
+const subscriptionJoiSchema = Joi.object({
+    subscription: Joi.string().required().valid(...subscriptionEnum)
+}).messages({
+    'any.only': 'Subscription must be one of {#valids}',
+    'string.base': 'field subscription must be a string'
+})
 
 module.exports = {
     userModel,
     userJoiSchema,
+    subscriptionJoiSchema,
 }

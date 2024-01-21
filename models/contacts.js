@@ -1,5 +1,5 @@
-const mongoose = require("mongoose")
-const Joi = require("joi")
+const mongoose = require('mongoose')
+const Joi = require('joi')
 
 const contactSchema = new mongoose.Schema(
     {
@@ -9,13 +9,19 @@ const contactSchema = new mongoose.Schema(
         },
         email: {
             type: String,
+            required: true,
         },
         phone: {
             type: String,
+            required: true,
         },
         favorite: {
             type: Boolean,
             default: false,
+        },
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'users',
         },
     },
     { versionKey: false }

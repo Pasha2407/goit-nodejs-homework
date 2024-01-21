@@ -1,10 +1,10 @@
-const bcrypt = require("bcrypt")
+const bcrypt = require('bcrypt')
 
 const { userModel } = require('../../models/users')
 const newError = require('../../heplers/newError')
 
 async function register(req, res) {
-    const { name, email, password, subscription } = req.body
+    const { email, password, subscription } = req.body
 
     const user = await userModel.findOne({ email })
     if (user !== null) {
@@ -12,10 +12,10 @@ async function register(req, res) {
     }
     const passwordHash = await bcrypt.hash(password, 8)
 
-    const result = await userModel.create({ name, email, password: passwordHash, subscription })
+    const result = await userModel.create({ email, password: passwordHash, subscription })
 
     const { subscription: subscriptionResponse } = result
-    const userResponse = { name, email, subscription: subscriptionResponse }
+    const userResponse = { email, subscription: subscriptionResponse }
 
     res.status(201).send({ user: userResponse })
 }
