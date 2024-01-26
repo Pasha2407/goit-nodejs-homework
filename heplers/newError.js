@@ -1,7 +1,13 @@
-function newError(status) {
-    const error = new Error()
-    error.status = status
-    throw error
+const messages = {
+    401: 'Not authorized',
+    404: 'Not found',
+    409: 'Email in use'
 }
 
-module.exports = newError;
+function newError(status, message = messages[status]) {
+    const error = new Error(message)
+    error.status = status
+    return error
+}
+
+module.exports = newError

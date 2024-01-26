@@ -1,21 +1,23 @@
 const express = require('express')
-const { contactJoiSchema, favoriteJoiSchema } = require("../../models/contact")
-
 const router = express.Router()
-const wrapper = require('../../heplers/wrapper')
-const method = require('../../controllers/index')
+
 const validateSchema = require('../../middlewares/validateSchema')
+const { contactJoiSchema, favoriteJoiSchema } = require('../../models/contacts')
 
-router.get('/', wrapper(method.getAll));
+const wrapper = require('../../heplers/wrapper')
+const method = require('../../controllers/contacts/index')
 
-router.get('/:id', wrapper(method.get));
 
-router.post('/', validateSchema(contactJoiSchema), wrapper(method.add));
+router.get('/', wrapper(method.getAll))
 
-router.delete('/:id', wrapper(method.remove));
+router.get('/:id', wrapper(method.getById))
 
-router.put('/:id', validateSchema(contactJoiSchema), wrapper(method.update));
+router.post('/', validateSchema(contactJoiSchema), wrapper(method.add))
 
-router.patch('/:id', validateSchema(favoriteJoiSchema), wrapper(method.update));
+router.delete('/:id', wrapper(method.remove))
+
+router.put('/:id', validateSchema(contactJoiSchema), wrapper(method.update))
+
+router.patch('/:id/favorite', validateSchema(favoriteJoiSchema), wrapper(method.update))
 
 module.exports = router
