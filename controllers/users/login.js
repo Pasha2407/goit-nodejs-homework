@@ -28,7 +28,7 @@ async function login(req, res) {
     const { subscription } = result
     const userResponse = { email, subscription }
 
-    res.status(201).send({ token, user: userResponse })
+    res.status(200).send({ token, user: userResponse })
 }
 
 module.exports = login
