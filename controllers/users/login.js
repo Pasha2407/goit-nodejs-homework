@@ -9,12 +9,12 @@ async function login(req, res) {
 
     const user = await userModel.findOne({ email })
     if (user === null) {
-        newError(401, 'Email or password is wrong')
+        throw newError(401, 'Email or password is wrong')
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
     if (isMatch === false) {
-        newError(401, 'Email or password is wrong')
+        throw newError(401, 'Email or password is wrong')
     }
 
     const token = jwt.sign(

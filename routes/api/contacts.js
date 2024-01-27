@@ -7,7 +7,6 @@ const { contactJoiSchema, favoriteJoiSchema } = require('../../models/contacts')
 const wrapper = require('../../heplers/wrapper')
 const method = require('../../controllers/contacts/index')
 
-
 router.get('/', wrapper(method.getAll))
 
 router.get('/:id', wrapper(method.getById))
