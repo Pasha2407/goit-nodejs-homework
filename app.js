@@ -17,6 +17,8 @@ const validateToken = require('./middlewares/validateToken')
 app.use('/api/contacts', validateToken, contactsRouter)
 app.use('/api/users', usersRouter)
 
+app.use('/avatars', express.static('public/avatars'))
+
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
 })
