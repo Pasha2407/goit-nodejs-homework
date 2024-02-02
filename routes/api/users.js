@@ -26,4 +26,8 @@ router.patch('/avatar', validateToken, uploadAvatar.single('avatar'), jimpEdit, 
 
 router.get('/avatar', validateToken, wrapper(method.getAvatar))
 
+router.get('/verify/:verifyToken', wrapper(method.verifyEmail))
+
+router.post('/verify', wrapper(method.reVerification))
+
 module.exports = router
