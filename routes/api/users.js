@@ -8,6 +8,7 @@ const jimpEdit = require('../../middlewares/jimpEdit')
 const validateSchema = require('../../middlewares/validateSchema')
 const { userJoiSchema } = require('../../models/users')
 const { subscriptionJoiSchema } = require('../../models/users')
+const { verifyEmailJoiSchema } = require('../../models/users')
 
 const wrapper = require('../../heplers/wrapper')
 const method = require('../../controllers/users/index')
@@ -28,6 +29,6 @@ router.get('/avatar', validateToken, wrapper(method.getAvatar))
 
 router.get('/verify/:verifyToken', wrapper(method.verifyEmail))
 
-router.post('/verify', wrapper(method.reVerification))
+router.post('/verify', validateSchema(verifyEmailJoiSchema), wrapper(method.reVerification))
 
 module.exports = router

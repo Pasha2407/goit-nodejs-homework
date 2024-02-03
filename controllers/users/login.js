@@ -17,6 +17,10 @@ async function login(req, res) {
         throw newError(401, 'Email or password is wrong')
     }
 
+    if (user.verify === false) {
+        throw newError(403, 'No verification')
+    }
+
     const token = jwt.sign(
         { id: user._id, name: user.name },
         process.env.JWT_SECRET,
