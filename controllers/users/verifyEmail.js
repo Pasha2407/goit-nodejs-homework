@@ -1,5 +1,5 @@
 const { userModel } = require('../../models/users')
-const newError = require('../../heplers/newError')
+const newError = require('../../helpers/newError')
 
 async function verifyEmail(req, res) {
     const { verifyToken } = req.params

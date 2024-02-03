@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { userModel } = require('../models/users')
-const newError = require('../heplers/newError')
+const newError = require('../helpers/newError')
 
 function auth(req, res, next) {
     const authHeader = req.headers.authorization

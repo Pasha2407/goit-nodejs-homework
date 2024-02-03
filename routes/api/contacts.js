@@ -4,7 +4,7 @@ const router = express.Router()
 const validateSchema = require('../../middlewares/validateSchema')
 const { contactJoiSchema, favoriteJoiSchema } = require('../../models/contacts')
 
-const wrapper = require('../../heplers/wrapper')
+const wrapper = require('../../helpers/wrapper')
 const method = require('../../controllers/contacts/index')
 
 router.get('/', wrapper(method.getAll))

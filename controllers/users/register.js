@@ -2,9 +2,13 @@ const crypto = require('node:crypto')
 const bcrypt = require('bcrypt')
 const gravatar = require('gravatar')
 
+const fs = require('node:fs')
+const path = require('node:path')
+const ejs = require('ejs')
+
 const { userModel } = require('../../models/users')
-const newError = require('../../heplers/newError')
-const sendEmail = require('../../heplers/sendEmail')
+const newError = require('../../helpers/newError')
+const sendEmail = require('../../helpers/sendEmail')
 
 async function register(req, res) {
     const { email, password, subscription } = req.body
@@ -16,13 +20,16 @@ async function register(req, res) {
     }
     const passwordHash = await bcrypt.hash(password, 8)
 
+    const templatePath = path.join(__dirname, '..', '..', 'helpers/templateMessage.ejs')
+    const template = fs.readFileSync(templatePath, 'utf8')
     const verifyToken = crypto.randomUUID()
+    const htmlContent = ejs.render(template, { verifyToken })
+
     await sendEmail({
         to: email,
         from: 'pasha.khimchuk2@gmail.com',
         subject: 'Hello',
-        html: `To confirm your registration please click on the <a href='http://localhost:3000/api/users/verify/${verifyToken}'>link</a>`,
-        text: `To confirm your registration please open the link http://localhost:3000/api/users/verify/${verifyToken}`,
+        html: htmlContent,
     })
 
     const result = await userModel.create({ email, password: passwordHash, subscription, avatarURL, verifyToken })
@@ -30,7 +37,7 @@ async function register(req, res) {
     const { subscription: subscriptionResponse } = result
     const userResponse = { email, subscription: subscriptionResponse }
 
-    res.status(201).send({ user: userResponse })
+    res.status(201).send({ user: userResponse, message: 'Email is not verified, go to your mailbox and confirm your mail' })
 }
 
 module.exports = register

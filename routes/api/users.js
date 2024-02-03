@@ -10,7 +10,7 @@ const { userJoiSchema } = require('../../models/users')
 const { subscriptionJoiSchema } = require('../../models/users')
 const { verifyEmailJoiSchema } = require('../../models/users')
 
-const wrapper = require('../../heplers/wrapper')
+const wrapper = require('../../helpers/wrapper')
 const method = require('../../controllers/users/index')
 
 router.post('/register', validateSchema(userJoiSchema), wrapper(method.register))

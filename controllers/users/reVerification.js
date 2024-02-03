@@ -1,8 +1,12 @@
 const crypto = require('node:crypto')
 
+const fs = require('node:fs')
+const path = require('node:path')
+const ejs = require('ejs')
+
 const { userModel } = require('../../models/users')
-const newError = require('../../heplers/newError')
-const sendEmail = require('../../heplers/sendEmail')
+const newError = require('../../helpers/newError')
+const sendEmail = require('../../helpers/sendEmail')
 
 async function reVerification(req, res) {
     const { email } = req.body
@@ -12,13 +16,16 @@ async function reVerification(req, res) {
         throw newError(400, 'Verification has already been passed')
     }
 
+    const templatePath = path.join(__dirname, '..', '..', 'helpers/templateMessage.ejs')
+    const template = fs.readFileSync(templatePath, 'utf8')
     const verifyToken = crypto.randomUUID()
+    const htmlContent = ejs.render(template, { verifyToken })
+
     await sendEmail({
         to: email,
         from: 'pasha.khimchuk2@gmail.com',
         subject: 'Hello',
-        html: `To confirm your registration please click on the <a href='http://localhost:3000/api/users/verify/${verifyToken}'>link</a>`,
-        text: `To confirm your registration please open the link http://localhost:3000/api/users/verify/${verifyToken}`,
+        html: htmlContent,
     })
 
     await userModel.findByIdAndUpdate(user._id, { verifyToken })

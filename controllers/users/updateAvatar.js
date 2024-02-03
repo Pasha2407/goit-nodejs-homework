@@ -2,7 +2,7 @@ const fs = require('node:fs/promises')
 const path = require('node:path')
 
 const { userModel } = require('../../models/users')
-const newError = require('../../heplers/newError')
+const newError = require('../../helpers/newError')
 
 async function updateAvatar(req, res) {
     await fs.rename(
