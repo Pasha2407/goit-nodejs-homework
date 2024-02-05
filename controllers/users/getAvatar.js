@@ -1,7 +1,7 @@
 const path = require('node:path')
 
 const { userModel } = require('../../models/users')
-const newError = require('../../heplers/newError')
+const newError = require('../../helpers/newError')
 
 async function getAvatar(req, res) {
     const user = await userModel.findById(req.user.id)

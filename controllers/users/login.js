@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 
 const { userModel } = require('../../models/users')
-const newError = require('../../heplers/newError')
+const newError = require('../../helpers/newError')
 
 async function login(req, res) {
     const { email, password } = req.body
@@ -15,6 +15,10 @@ async function login(req, res) {
     const isMatch = await bcrypt.compare(password, user.password)
     if (isMatch === false) {
         throw newError(401, 'Email or password is wrong')
+    }
+
+    if (user.verify === false) {
+        throw newError(403, 'No verification')
     }
 
     const token = jwt.sign(

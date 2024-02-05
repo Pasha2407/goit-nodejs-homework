@@ -26,6 +26,7 @@ app.use((req, res) => {
 const errorResponses = {
   400: { status: 400 },
   401: { status: 401 },
+  403: { status: 403 },
   404: { status: 404 },
   409: { status: 409 }
 };

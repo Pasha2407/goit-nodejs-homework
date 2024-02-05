@@ -26,6 +26,14 @@ const userSchema = new mongoose.Schema(
         avatarURL: {
             type: String,
         },
+        verify: {
+            type: Boolean,
+            default: false,
+        },
+        verifyToken: {
+            type: String,
+            required: true,
+        },
     },
     { versionKey: false }
 )
@@ -54,8 +62,16 @@ const subscriptionJoiSchema = Joi.object({
     'string.base': 'field subscription must be a string'
 })
 
+const verifyEmailJoiSchema = Joi.object({
+    email: Joi.string().required()
+}).messages({
+    'any.required': 'missing required email field',
+    'string.base': 'field email must be a string'
+})
+
 module.exports = {
     userModel,
     userJoiSchema,
     subscriptionJoiSchema,
+    verifyEmailJoiSchema,
 }
